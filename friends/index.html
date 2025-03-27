@@ -4,9 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello Hexo！, Kanzai&#39;s blog">
-    <meta name="description" content="Hexo，启动！鼠鼠是个笨蛋，费劲千辛万苦才搭好这个blog，还有很多需要完善的地方。
-用hexo框架搭建的博客用起来还是很舒服的，搭建教程网上随便一搜都有的，比如说 点击这里 这就是一篇不错的新手向搭建教程，鼠鼠就是按照这个教程搭建的。于">
+    <meta name="keywords" content="friends, Kanzai&#39;s blog">
+    <meta name="description" content="Kanzai&#39;s blog">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello Hexo！ | Kanzai&#39;s blog</title>
+    <title>friends | Kanzai&#39;s blog</title>
     <link rel="icon" type="image/png" href="/snowleopard_1.png">
     
     <style>
@@ -342,12 +341,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello Hexo！</h1>
+                    <h1 class="description center-align post-title">friends</h1>
                 </div>
             </div>
         </div>
@@ -383,7 +382,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2025-03-26
+                    2025-03-27
                 </div>
                 
 
@@ -404,32 +403,8 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Hexo，启动！"><a href="#Hexo，启动！" class="headerlink" title="Hexo，启动！"></a>Hexo，启动！</h1><p>鼠鼠是个笨蛋，费劲千辛万苦才搭好这个blog，还有很多需要完善的地方。</p>
-<p>用hexo框架搭建的博客用起来还是很舒服的，搭建教程网上随便一搜都有的，比如说 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/60578464">点击这里</a> 这就是一篇不错的新手向搭建教程，鼠鼠就是按照这个教程搭建的。于是搭建过程不多赘述，下面就来说一说鼠鼠在搭建过程中遇到的问题。</p>
-<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="Github端口拒绝"><a href="#Github端口拒绝" class="headerlink" title="Github端口拒绝"></a>Github端口拒绝</h3><p>如果在链接hexo和GitHub时出现以下报错信息：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh: connect to host github.com port 22: Connection refused</span><br></pre></td></tr></table></figure>
-
-<p>这个错误提示信息的意思是连接github.com的22端口被拒绝了，此时我们可以尝试换一个端口来解决这个问题。</p>
-<h5 id="1、在-ssh文件夹下新建config文件"><a href="#1、在-ssh文件夹下新建config文件" class="headerlink" title="1、在.ssh文件夹下新建config文件"></a>1、在.ssh文件夹下新建config文件</h5><p>先新建config.txt，将下面命令直接复制进去保存退出，使用重命名删掉.txt后缀</p>
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">  Hostname ssh.github.com</span><br><span class="line">  Port 443</span><br></pre></td></tr></table></figure>
-
-<p>这样就指定了443端口作为ssh连接github.com的端口。443 端口是 HTTPS 协议的默认端口，通常用于加密的网页浏览和安全的网络连接。在这里，它可能表示通过加密的方式连接到 GitHub 的 SSH 服务，以确保通信的安全性和保密性。</p>
-<h5 id="2、测试并完成连接"><a href="#2、测试并完成连接" class="headerlink" title="2、测试并完成连接"></a>2、测试并完成连接</h5><p>在hexo根目录下打开Git Bash，输入ssh -T <a href="mailto:&#x67;&#105;&#x74;&#x40;&#x67;&#105;&#116;&#104;&#117;&#98;&#x2e;&#99;&#x6f;&#x6d;">git@github.com</a> 测试是否能连上。</p>
-<p>回车后出现一大段文字，不用管它，只要在末尾输入yes+回车</p>
-<p>出现以下提示说明你已经连接成功了</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi xxx! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br></pre></td></tr></table></figure>
-
-<p>此时如果再输入ssh -T <a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#x69;&#116;&#104;&#117;&#x62;&#x2e;&#99;&#x6f;&#109;">git@github.com</a> 就会出现上面successfully的提示，说明已经连接成功了。</p>
-<p>鼠鼠按照上面的方法解决了这个问题，如果你还是不能解决解决问题(比如说你的DNS被污染了)可以参考这篇CSDN笔记：<a target="_blank" rel="noopener" href="https://blog.csdn.net/hjy_mysql/article/details/131596257">如何解决：ssh: connect to host github.com port 22: Connection refused</a> </p>
-<h3 id="Hexo部署到GitHub报错"><a href="#Hexo部署到GitHub报错" class="headerlink" title="Hexo部署到GitHub报错"></a>Hexo部署到GitHub报错</h3><p>如果你和鼠鼠一样前面跟着教程一切顺利，但是在hexo d时出现以下报错</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">! [remote rejected] HEAD -&gt; main (push declined due to repository rule violations)</span><br></pre></td></tr></table></figure>
-
-<p>说明你的推送被仓库的分支保护规则拒绝了，保护规则用于保护你的个人信息不会被泄露，当检测到你要push的内容中疑似有&#x3D;&#x3D;密钥&#x3D;&#x3D;时，会拒绝你的请求。你可以进入库的目录点击“settings”</p>
-<p><img src="/image-20250327123758220.png"></p>
-<p>在&#x3D;&#x3D;“Advanced security”&#x3D;&#x3D;拉到最底下</p>
-<p><img src="/image-20250327124515041.png"></p>
-<p>把图中秘密保护选项关掉即可。</p>
-<p><strong>&#x3D;&#x3D;ps：虽然鼠鼠是这么做的，但是鼠鼠不能保证其安全性，如果大佬有更好的方法请指正！&#x3D;&#x3D;</strong></p>
+                <p>type: “friends”</p>
+<p>layout: “friends”</p>
 
                 
             </div>
@@ -456,7 +431,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2025/03/26/hello-world/">http://example.com/2025/03/26/hello-world/</a>
+                    <a href="http://example.com/friends/index.html">http://example.com/friends/index.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -542,13 +517,13 @@
                 <i class="far fa-dot-circle"></i>&nbsp;本篇
             </div>
             <div class="card">
-                <a href="/2025/03/26/hello-world/">
+                <a href="/friends/index.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Hello Hexo！">
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="friends">
                         
-                        <span class="card-title">Hello Hexo！</span>
+                        <span class="card-title">friends</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -559,7 +534,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2025-03-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-03-27
                             </span>
                         <span class="publish-author">
                             
@@ -580,13 +555,13 @@
                 本篇&nbsp;<i class="far fa-dot-circle"></i>
             </div>
             <div class="card">
-                <a href="/2025/03/26/hello-world/">
+                <a href="/friends/index.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Hello Hexo！">
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="friends">
                         
-                        <span class="card-title">Hello Hexo！</span>
+                        <span class="card-title">friends</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -597,7 +572,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2025-03-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-03-27
                             </span>
                         <span class="publish-author">
                             
