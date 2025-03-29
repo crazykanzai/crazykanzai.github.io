@@ -60,7 +60,8 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css"></head>
+<meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -407,22 +408,22 @@
                 <h1 id="Hexo，启动！"><a href="#Hexo，启动！" class="headerlink" title="Hexo，启动！"></a>Hexo，启动！</h1><p>鼠鼠是个笨蛋，费劲千辛万苦才搭好这个blog，还有很多需要完善的地方。</p>
 <p>用hexo框架搭建的博客用起来还是很舒服的，搭建教程网上随便一搜都有的，比如说 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/60578464">点击这里</a> 这就是一篇不错的新手向搭建教程，鼠鼠就是按照这个教程搭建的。于是搭建过程不多赘述，下面就来说一说鼠鼠在搭建过程中遇到的问题。</p>
 <h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="Github端口拒绝"><a href="#Github端口拒绝" class="headerlink" title="Github端口拒绝"></a>Github端口拒绝</h3><p>如果在链接hexo和GitHub时出现以下报错信息：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh: connect to host github.com port 22: Connection refused</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh: connect to host github.com port 22: Connection refused</span><br></pre></td></tr></table></figure>
 
 <p>这个错误提示信息的意思是连接github.com的22端口被拒绝了，此时我们可以尝试换一个端口来解决这个问题。</p>
 <h5 id="1、在-ssh文件夹下新建config文件"><a href="#1、在-ssh文件夹下新建config文件" class="headerlink" title="1、在.ssh文件夹下新建config文件"></a>1、在.ssh文件夹下新建config文件</h5><p>先新建config.txt，将下面命令直接复制进去保存退出，使用重命名删掉.txt后缀</p>
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">  Hostname ssh.github.com</span><br><span class="line">  Port 443</span><br></pre></td></tr></table></figure>
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">  Hostname ssh.github.com</span><br><span class="line">  Port 443</span><br></pre></td></tr></table></figure>
 
 <p>这样就指定了443端口作为ssh连接github.com的端口。443 端口是 HTTPS 协议的默认端口，通常用于加密的网页浏览和安全的网络连接。在这里，它可能表示通过加密的方式连接到 GitHub 的 SSH 服务，以确保通信的安全性和保密性。</p>
-<h5 id="2、测试并完成连接"><a href="#2、测试并完成连接" class="headerlink" title="2、测试并完成连接"></a>2、测试并完成连接</h5><p>在hexo根目录下打开Git Bash，输入ssh -T <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#116;&#104;&#x75;&#x62;&#46;&#99;&#111;&#x6d;">git@github.com</a> 测试是否能连上。</p>
+<h5 id="2、测试并完成连接"><a href="#2、测试并完成连接" class="headerlink" title="2、测试并完成连接"></a>2、测试并完成连接</h5><p>在hexo根目录下打开Git Bash，输入ssh -T <a href="mailto:&#103;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#104;&#117;&#x62;&#x2e;&#99;&#111;&#109;">git@github.com</a> 测试是否能连上。</p>
 <p>回车后出现一大段文字，不用管它，只要在末尾输入yes+回车</p>
 <p>出现以下提示说明你已经连接成功了</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi xxx! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Hi xxx! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br></pre></td></tr></table></figure>
 
-<p>此时如果再输入ssh -T <a href="mailto:&#x67;&#105;&#116;&#x40;&#103;&#x69;&#x74;&#x68;&#x75;&#98;&#x2e;&#99;&#111;&#x6d;">git@github.com</a> 就会出现上面successfully的提示，说明已经连接成功了。</p>
+<p>此时如果再输入ssh -T <a href="mailto:&#103;&#x69;&#x74;&#64;&#x67;&#x69;&#116;&#104;&#x75;&#98;&#x2e;&#x63;&#111;&#109;">git@github.com</a> 就会出现上面successfully的提示，说明已经连接成功了。</p>
 <p>鼠鼠按照上面的方法解决了这个问题，如果你还是不能解决解决问题(比如说你的DNS被污染了)可以参考这篇CSDN笔记：<a target="_blank" rel="noopener" href="https://blog.csdn.net/hjy_mysql/article/details/131596257">如何解决：ssh: connect to host github.com port 22: Connection refused</a> </p>
 <h3 id="Hexo部署到GitHub报错"><a href="#Hexo部署到GitHub报错" class="headerlink" title="Hexo部署到GitHub报错"></a>Hexo部署到GitHub报错</h3><p>如果你和鼠鼠一样前面跟着教程一切顺利，但是在hexo d时出现以下报错</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">! [remote rejected] HEAD -&gt; main (push declined due to repository rule violations)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">! [remote rejected] HEAD -&gt; main (push declined due to repository rule violations)</span><br></pre></td></tr></table></figure>
 
 <p>说明你的推送被仓库的分支保护规则拒绝了，保护规则用于保护你的个人信息不会被泄露，当检测到你要push的内容中疑似有&#x3D;&#x3D;密钥&#x3D;&#x3D;时，会拒绝你的请求。你可以进入库的目录点击“settings”</p>
 <p><img src="/2025/03/26/hello-world/image-20250327123758220.png"></p>
@@ -645,6 +646,31 @@
 
 <script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
 
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFunction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
 
 
     </div>
