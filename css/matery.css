@@ -103,35 +103,41 @@ blockquote {
 pre {
     padding: 1.5rem 1.5rem 1.5rem 3.3rem !important;
     margin: 1rem 0 !important;
+    background: 
+#272822;
     overflow: auto;
     border-radius: 0.35rem;
     tab-size: 4;
 }
-
 .code-area::after {
     content: " ";
     position: absolute;
     border-radius: 50%;
-    background: #ff5f56;
+    background: 
+#ff5f56;
     width: 12px;
     height: 12px;
     top: 0;
     left: 12px;
     margin-top: 12px;
-    -webkit-box-shadow: 20px 0 #ffbd2e, 40px 0 #27c93f;
-    box-shadow: 20px 0 #ffbd2e, 40px 0 #27c93f;
+    -webkit-box-shadow: 20px 0 
+#ffbd2e, 40px 0 
+#27c93f;
+    box-shadow: 20px 0 
+#ffbd2e, 40px 0 
+#27c93f;
 }
-
 code {
     padding: 1px 5px;
     top: 13px !important;
     font-family: Inconsolata, Monaco, Consolas, 'Courier New', Courier, monospace;
     font-size: 0.91rem;
-    color: #e96900;
-    background-color: #f8f8f8;
+    color: 
+#e96900;
+    background-color: 
+#f8f8f8;
     border-radius: 2px;
 }
-
 .code_copy {
     position: absolute;
     top: 0.7rem;
@@ -140,7 +146,6 @@ code {
     filter: invert(50%);
     cursor: pointer;
 }
-
 .codecopy_notice {
     position: absolute;
     top: 0.7rem;
@@ -149,7 +154,6 @@ code {
     filter: invert(50%);
     opacity: 0;
 }
-
 .code_lang {
     position: absolute;
     top: 1.2rem;
@@ -165,7 +169,7 @@ code {
 .code-expand {
     position: absolute;
     top: 4px;
-    right: 0;
+    right: 0px;
     filter: invert(50%);
     padding: 7px;
     z-index: 999 !important;
@@ -185,8 +189,10 @@ code {
 
 pre code {
     padding: 0;
-    color: #e8eaf6;
-    background-color: #272822;
+    color: 
+#e8eaf6;
+    background-color: 
+#272822;
 }
 
 pre[class*="language-"] {
@@ -196,7 +202,8 @@ pre[class*="language-"] {
 
 code[class*="language-"],
 pre[class*="language-"] {
-    color: #e8eaf6;
+    color: 
+#e8eaf6;
     white-space: pre-wrap !important;
 }
 
@@ -207,7 +214,8 @@ pre[class*="language-"] {
 .line-numbers {
     padding: 1.5rem 1.5rem 1.5rem 3.2rem !important;
     margin: 1rem 0 !important;
-    background: #272822;
+    background: 
+#272822;
     overflow: auto;
     border-radius: 0.35rem;
     tab-size: 4;
@@ -2320,4 +2328,32 @@ body.DarkMode .theme-btn:hover {
     font-family:'Font Awesome 5 Free';
     font-weight: 900;
     color: #d9534f;
+}
+
+/* --- 1. 引入 JetBrains Mono 字体 (使用 CDN 加速) --- */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+/* --- 2. 强力覆盖代码块样式 --- */
+code, pre {
+    /* 核心：应用新字体，如果加载失败则回退到 Fira Code 或 Consolas */
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+    font-size: 14px !important; /* 字体改大一点，看着不累 */
+}
+
+/* 针对 Matery 特有的代码块容器优化 */
+pre[class*="language-"] {
+    /* 让背景色稍微透明一点，配合你的深色背景图会很帅（玻璃拟态） */
+    background-color: rgba(40, 44, 52, 0.9) !important; 
+    
+    /* 增加阴影，让代码块浮起来 */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+    
+    /* 调整圆角 */
+    border-radius: 10px !important;
+}
+
+/* 调整代码块顶部的 Mac 风格圆点栏背景 */
+.code-area .code-header {
+    background-color: rgba(40, 44, 52, 0.95) !important;
+    border-bottom: 1px solid #444 !important;
 }

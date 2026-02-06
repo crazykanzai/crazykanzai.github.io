@@ -1,1 +1,206 @@
 /* Here is your custom css styles. */
+
+/* --- 完美复刻 Mac 风格代码块 --- */
+
+/* 1. 代码块容器 */
+pre[class*="language-"] {
+    background: #2d2d2d !important; /* 背景色 */
+    border-radius: 6px;
+    padding-top: 35px !important; /* 留出顶部位置给红黄绿点 */
+    position: relative;
+    margin: 20px 0;
+}
+
+/* 2. 顶部的 Mac 栏背景 */
+pre[class*="language-"]::before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: #21252b; /* 顶栏深灰色 */
+    border-radius: 6px 6px 0 0;
+    z-index: 10;
+}
+
+/* 3. 红黄绿三个圆点 */
+pre[class*="language-"]::after {
+    content: " ";
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fc625d; /* 红点 */
+    box-shadow: 20px 0 #fdbc40, 40px 0 #35cd4b; /* 黄点和绿点 */
+    z-index: 11;
+}
+
+/* 4. 修正工具栏位置（复制按钮和语言标签） */
+div.code-toolbar > .toolbar {
+    top: 5px !important; /* 让按钮在顶栏垂直居中 */
+    right: 10px !important;
+    opacity: 1 !important; /* 始终显示，不需要鼠标悬停 */
+}
+
+/* 5. 复制按钮样式美化 */
+div.code-toolbar > .toolbar > .toolbar-item > button {
+    background: transparent !important;
+    color: #b0b0b0 !important;
+    box-shadow: none !important;
+    border-radius: 4px;
+    font-size: 13px;
+    padding: 2px 8px;
+    border: none;
+    cursor: pointer;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 6. 语言标签样式 (如 "JavaScript") */
+div.code-toolbar > .toolbar > .toolbar-item > span {
+    background: transparent !important;
+    color: #7a7a7a !important;
+    box-shadow: none !important;
+    font-size: 13px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* 7. 解决行号和代码的对齐问题 */
+pre[class*="language-"].line-numbers {
+    padding-left: 3.8em !important; /* 给行号留位置 */
+}
+
+.line-numbers .line-numbers-rows {
+    border-right: 1px solid #444 !important; /* 行号右边的分割线 */
+    top: 35px !important; /* 行号下移，避开Mac顶栏 */
+}
+
+
+/* --- 1. 核心修复：统一背景色，消除右边的色块 --- */
+/* 让最外层、表格、行、单元格的背景色全部一致 */
+.highlight, 
+.highlight table, 
+.highlight tbody, 
+.highlight tr, 
+.highlight td,
+.highlight .code pre,
+.highlight .gutter pre {
+    background-color: #21252b !important; /* 统一为深黑色 */
+    border: none !important;
+    margin: 0 !important;
+}
+
+/* 强制表格宽度撑满，防止留白 */
+.highlight table {
+    width: 100% !important;
+}
+
+/* --- 2. 文字颜色修复 --- */
+/* --- 1. 基础背景修复 (确保深色背景无白边) --- */
+.highlight, .highlight table, .highlight tbody, .highlight tr, .highlight td {
+    background-color: #21252b !important;
+    border: none !important;
+    margin: 0 !important;
+}
+
+/* --- 2. 基础文字颜色 --- */
+.highlight .code pre {
+    color: #abb2bf !important; /* 默认浅灰色 */
+    font-family: "Consolas", "Monaco", monospace !important;
+}
+
+/* --- 3. 强力语法高亮 (增加权重，防止无效) --- */
+
+/* 关键字 (sudo, if, for, while, return) */
+.highlight .code .hljs-keyword, 
+.highlight .code .hljs-selector-tag,
+.highlight .code .hljs-operator {
+    color: #c678dd !important; /* 紫色 */
+    font-weight: bold !important;
+}
+
+/* 字符串 ("text") */
+.highlight .code .hljs-string, 
+.highlight .code .hljs-doctag {
+    color: #98c379 !important; /* 绿色 */
+}
+
+/* 内置命令/函数 (cd, echo, print, console) */
+.highlight .code .hljs-built_in, 
+.highlight .code .hljs-title, 
+.highlight .code .hljs-section, 
+.highlight .code .hljs-name {
+    color: #e6c07b !important; /* 黄色 */
+}
+
+/* 变量/属性 */
+.highlight .code .hljs-variable, 
+.highlight .code .hljs-template-variable, 
+.highlight .code .hljs-attr {
+    color: #d19a66 !important; /* 橙色 */
+}
+
+/* 注释 (# comment) */
+.highlight .code .hljs-comment, 
+.highlight .code .hljs-quote {
+    color: #7f848e !important; /* 灰色 */
+    font-style: italic !important;
+}
+
+/* 数字/布尔值 */
+.highlight .code .hljs-number, 
+.highlight .code .hljs-literal {
+    color: #d19a66 !important; /* 橙色 */
+}
+
+/* 函数参数 */
+.highlight .code .hljs-params {
+    color: #abb2bf !important;
+}
+
+/* --- 4. 确保复制按钮可见 --- */
+.code_copy {
+    display: block !important;
+    z-index: 999 !important;
+    color: #b0b0b0 !important;
+}
+
+/* --- 3. 找回消失的复制按钮 --- */
+/* 强制提升复制按钮的层级和可见性 */
+.code_copy {
+    display: block !important;
+    position: absolute !important;
+    top: 9px !important;
+    right: 10px !important;
+    color: #b0b0b0 !important; /* 按钮颜色：浅灰 */
+    font-size: 1.2rem !important;
+    cursor: pointer !important;
+    z-index: 100 !important; /* 确保它浮在最上面 */
+    opacity: 0.7;
+}
+
+.code_copy:hover {
+    color: #fff !important; /* 鼠标悬停变白 */
+    opacity: 1;
+}
+
+/* 确保父容器是 relative 定位，否则按钮会跑飞 */
+.highlight {
+    position: relative !important;
+    border-radius: 5px !important;
+    overflow: hidden !important; /* 切掉圆角溢出 */
+}
+
+/* --- 4. 修复 Mac 顶栏背景 --- */
+/* 如果你有 Mac 顶栏脚本，确保它的背景也是深色 */
+.highlight-wrap {
+    background: #21252b !important; 
+    border-radius: 5px;
+}
