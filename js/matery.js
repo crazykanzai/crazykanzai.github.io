@@ -187,3 +187,73 @@ if (localStorage.getItem('isDark') === '1') {
     document.body.classList.remove('DarkMode');
     $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')
 }
+
+
+
+
+/* 修复 PrismJS 代码块丢失复制按钮的问题 */
+$(function() {
+    // 等待页面加载完成
+    setTimeout(function() {
+        $('pre').each(function() {
+            var $pre = $(this);
+            
+            // 1. 如果已经有复制按钮了，就不重复添加
+            if ($pre.find('.copy-btn').length > 0) return;
+
+            // 2. 找到 Matery 生成的代码块头部 (包含红黄绿圆点的那个条)
+            // PrismJS 模式下，Matery 可能会生成一个 .code-header 或者是直接包裹在 .code-area 里
+            var $header = $pre.parent().find('.code-header'); 
+            
+            // 如果找不到 header，说明可能是纯 PrismJS 结构，尝试直接找父级
+            if ($header.length === 0) {
+                 // 这种情况通常不需要特殊处理，直接把按钮浮动在 pre 右上角即可
+            }
+
+            // 3. 创建复制按钮元素
+            var $copyBtn = $('<span class="copy-btn"><i class="fas fa-copy"></i></span>');
+            
+            // 4. 将按钮插入到 DOM 中
+            // 优先插入到 code-header 的右侧（如果存在 header）
+            if ($header.length > 0) {
+                // 如果 header 里已经有显示语言的 span，插在它前面或后面
+                $header.append($copyBtn);
+            } else {
+                // 如果没有 header，直接 append 到 pre 标签内，并用 CSS 绝对定位
+                $pre.css('position', 'relative');
+                $copyBtn.css({
+                    'position': 'absolute',
+                    'top': '5px',
+                    'right': '10px',
+                    'cursor': 'pointer',
+                    'color': '#fff',
+                    'z-index': '100'
+                });
+                $pre.append($copyBtn);
+            }
+
+            // 5. 绑定点击复制事件
+            $copyBtn.click(function() {
+                var codeToCopy = $pre.find('code').text();
+                
+                // 使用浏览器剪贴板 API
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(codeToCopy).then(function() {
+                        M.toast({html: '复制成功！'}); // Matery 自带的提示框
+                    }).catch(function(err) {
+                        M.toast({html: '复制失败，请手动复制'});
+                    });
+                } else {
+                    // 降级处理（旧浏览器）
+                    var textarea = document.createElement('textarea');
+                    textarea.value = codeToCopy;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    M.toast({html: '复制成功！'});
+                }
+            });
+        });
+    }, 1000); // 延迟 1 秒执行，确保 PrismJS 渲染完毕
+});
