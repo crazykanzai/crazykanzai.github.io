@@ -413,15 +413,18 @@
 <p><code>devicetree.dtb</code>：设备树，告诉 Linux 内核硬件地址（如 AD9361 在哪里）。</p>
 <p><code>system_top.bit.bin</code>：FPGA 的逻辑位流文件。</p>
 <h2 id="二、板上加载驱动"><a href="#二、板上加载驱动" class="headerlink" title="二、板上加载驱动"></a>二、板上加载驱动</h2><h3 id="1、使用串口与板子通信"><a href="#1、使用串口与板子通信" class="headerlink" title="1、使用串口与板子通信"></a>1、使用串口与板子通信</h3><p>这一步可以在Ubuntu里面直接用指令</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo screen/dev/ttyUSB0 115200	#ttyUSB0是你sdr连接到虚拟机的串口号</span><br></pre></td></tr></table></figure>
-
+<pre><code>sudo screen/dev/ttyUSB0 115200	#ttyUSB0是你sdr连接到虚拟机的串口号
+</code></pre>
 <p>也可以在windows里用MobaXterm软件</p>
 <p><img src="/2026/02/04/zai-antsdr-e200-shang-pei-zhi-openwifi-guo-cheng-zong-jie/image-20260206105908803.png" alt="image-20260206105908803"></p>
 <p>选择有USB-SERIAL的串口，波特率设置为115200就可以开始通信。</p>
 <p>可能会跳出来一堆ERROR，不要管它。</p>
 <h3 id="2、运行驱动脚本"><a href="#2、运行驱动脚本" class="headerlink" title="2、运行驱动脚本"></a>2、运行驱动脚本</h3><p>等root@analog：~出来之后，一条一条输入指令：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd openwifi		#不cd也行，只是后面的指令都要带上~/openwifi</span><br><span class="line">./setup_once.sh	#初始化驱动的，1.4.0要运行这条指令才会安装驱动，1.5.0应该也是同理吧</span><br><span class="line">./wgd.sh		#设备初始化</span><br><span class="line">./fosdem-11ag.sh	#路由赋能</span><br></pre></td></tr></table></figure>
-
+<pre><code>cd openwifi		#不cd也行，只是后面的指令都要带上~/openwifi
+./setup_once.sh	#初始化驱动的，1.4.0要运行这条指令才会安装驱动，1.5.0应该也是同理吧
+./wgd.sh		#设备初始化
+./fosdem-11ag.sh	#路由赋能
+</code></pre>
 <p>等到该命令结束后，看到sdr:AP-ENABLED就说明ANTSDR作为wifi的AP功能已经就绪，其他ERROR不用管。这时候手机能找到一个叫做openwifi的wifi信号，密码是openwifi。</p>
 <p>连上之后这时候还不能上网，只能进入一个openwifi的内置网页。</p>
 <p>为了使这个wifi可以上网，接下来的操作要在Linux下进行。</p>
@@ -447,10 +450,20 @@
 <li><strong>网关 (Gateway)</strong>：<strong>留空</strong>。</li>
 <li><em>解释</em>：这是作为路由器的 LAN 口 IP。不填网关是为了防止 Ubuntu 的上网流量错误地流向板子，导致断网。</li>
 </ul>
-<h3 id="3、开启路由功能"><a href="#3、开启路由功能" class="headerlink" title="3、开启路由功能"></a>3、开启路由功能</h3><h4 id="step1、在Ubuntu终端输入指令"><a href="#step1、在Ubuntu终端输入指令" class="headerlink" title="step1、在Ubuntu终端输入指令"></a>step1、在Ubuntu终端输入指令</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo ufw disable	#关闭防火墙</span><br><span class="line"></span><br><span class="line">#开启Linux内核的IP转发功能，允许数据包在ens37和ens33之间转发</span><br><span class="line">sudo sysctl -w net.ipv4.ip_forward=1</span><br><span class="line"></span><br><span class="line">#把板子的数据包伪装成ens33自己的IP再发送出去，这样才能与外网通信</span><br><span class="line">sudo iptables -t nat -A POSTROUTING -o ens33 -j MASQUERADE</span><br><span class="line"></span><br><span class="line"># 告诉 Ubuntu， 192.168.13.0/24 网络段的数据要从 SDR 发出去，保证虚拟机获得的数据能够下放至SDR，最后到手机。</span><br><span class="line">sudo ip route add 192.168.13.0/24 via 192.168.10.122 dev ens37</span><br></pre></td></tr></table></figure>
+<h3 id="3、开启路由功能"><a href="#3、开启路由功能" class="headerlink" title="3、开启路由功能"></a>3、开启路由功能</h3><h4 id="step1、在Ubuntu终端输入指令"><a href="#step1、在Ubuntu终端输入指令" class="headerlink" title="step1、在Ubuntu终端输入指令"></a>step1、在Ubuntu终端输入指令</h4><pre><code>sudo ufw disable	#关闭防火墙
 
-<h4 id="step2、在板子的串口终端输入指令"><a href="#step2、在板子的串口终端输入指令" class="headerlink" title="step2、在板子的串口终端输入指令"></a>step2、在板子的串口终端输入指令</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">route add default gw 192.168.10.1	#添加默认网关，解决“发出去”的问题</span><br><span class="line">echo &quot;nameserver 8.8.8.8&quot; &gt; /etc/resolv.conf	#配置DNS服务器</span><br></pre></td></tr></table></figure>
+#开启Linux内核的IP转发功能，允许数据包在ens37和ens33之间转发
+sudo sysctl -w net.ipv4.ip_forward=1
 
+#把板子的数据包伪装成ens33自己的IP再发送出去，这样才能与外网通信
+sudo iptables -t nat -A POSTROUTING -o ens33 -j MASQUERADE
+
+# 告诉 Ubuntu， 192.168.13.0/24 网络段的数据要从 SDR 发出去，保证虚拟机获得的数据能够下放至SDR，最后到手机。
+sudo ip route add 192.168.13.0/24 via 192.168.10.122 dev ens37
+</code></pre>
+<h4 id="step2、在板子的串口终端输入指令"><a href="#step2、在板子的串口终端输入指令" class="headerlink" title="step2、在板子的串口终端输入指令"></a>step2、在板子的串口终端输入指令</h4><pre><code>route add default gw 192.168.10.1	#添加默认网关，解决“发出去”的问题
+echo &quot;nameserver 8.8.8.8&quot; &gt; /etc/resolv.conf	#配置DNS服务器
+</code></pre>
 <p>然后手机就能连接上openwifi的热点并上网了。</p>
 
                 
