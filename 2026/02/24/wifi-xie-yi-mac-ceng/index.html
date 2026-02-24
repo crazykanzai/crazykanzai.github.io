@@ -5,7 +5,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="Kanzai&#39;s blog">
-    <meta name="description" content="在antsdr E200上配置Openwifi过程总结将antsdr E200配置成一个可以联网的路由器，只看开发手册可能觉得很简单，实际上还是有很多细节要注意。我搞了一整天终于配置好了，在这篇文章里我将总结一下我踩过的坑，帮助以后的同学能">
+    <meta name="description" content="WiFi通信基础：MAC架构1、数据包、帧和位当数据在计算机间传递的过程中，它从OSI模型上层逐步向下移至物理层，最终在物理层被转移到其他设备。
+数据按OSI模型传输时，每层都将在该数据上添加报头信息，使得它被另一台计算机接收时可以重新组合">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -341,7 +342,7 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/my_images/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/my_images/4.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
@@ -382,8 +383,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Openwifi/" class="post-category">
-                                Openwifi
+                            <a href="/categories/wifi%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                wifi协议学习
                             </a>
                         
                     </div>
@@ -395,7 +396,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2026-02-04
+                    2026-02-24
                 </div>
                 
 
@@ -421,67 +422,100 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="在antsdr-E200上配置Openwifi过程总结"><a href="#在antsdr-E200上配置Openwifi过程总结" class="headerlink" title="在antsdr E200上配置Openwifi过程总结"></a>在antsdr E200上配置Openwifi过程总结</h1><p>将antsdr E200配置成一个可以联网的路由器，只看开发手册可能觉得很简单，实际上还是有很多细节要注意。我搞了一整天终于配置好了，在这篇文章里我将总结一下我踩过的坑，帮助以后的同学能更好地完成这项工作。</p>
-<h2 id="一、镜像源的烧录"><a href="#一、镜像源的烧录" class="headerlink" title="一、镜像源的烧录"></a>一、镜像源的烧录</h2><h3 id="1、准备镜像"><a href="#1、准备镜像" class="headerlink" title="1、准备镜像"></a>1、准备镜像</h3><p>可以在[Openwifi的官方网站](<a target="_blank" rel="noopener" href="https://github.com/open-sdr/openwifi">open-sdr&#x2F;openwifi: open-source IEEE 802.11 WiFi baseband FPGA (chip) design: driver, software</a>)下找到镜像的下载链接。现在一般只有1.5.0版本的。不过我用的是[1.4.0版本](<a target="_blank" rel="noopener" href="https://github.com/pavelyazev/openwifi-libresdr?tab=readme-ov-file">pavelyazev&#x2F;openwifi-libresdr: OpenWIFI adaptation for the LibreSDR device</a>)，因为1.5.0版本它说我驱动是64位，板子的系统是32位，版本冲突了。当时不知道怎么解决，就去找了1.4.0版本。不过现在想想可能可以通过~&#x2F;openwifi&#x2F;setup_once.sh解决（没试过）</p>
-<p>在windows下可以使用Win32DiskImager烧录镜像源</p>
-<p>烧录完成后<strong>不管遇到任何提示你修复或格式化的弹窗都不要点</strong>，直接叉掉</p>
-<h3 id="2、替换引导文件"><a href="#2、替换引导文件" class="headerlink" title="2、替换引导文件"></a>2、替换引导文件</h3><p>打开&#x2F;boot&#x2F;openwifi&#x2F;antsdr_e200，复制里面的所有文件粘贴到boot根目录下</p>
-<p><code>BOOT.BIN</code>：包含 FSBL 和 U-Boot，决定板子上电如何初始化硬件引脚。</p>
-<p><code>devicetree.dtb</code>：设备树，告诉 Linux 内核硬件地址（如 AD9361 在哪里）。</p>
-<p><code>system_top.bit.bin</code>：FPGA 的逻辑位流文件。</p>
-<h2 id="二、板上加载驱动"><a href="#二、板上加载驱动" class="headerlink" title="二、板上加载驱动"></a>二、板上加载驱动</h2><h3 id="1、使用串口与板子通信"><a href="#1、使用串口与板子通信" class="headerlink" title="1、使用串口与板子通信"></a>1、使用串口与板子通信</h3><p>这一步可以在Ubuntu里面直接用指令</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> screen/dev/ttyUSB0 <span class="token number">115200</span>	<span class="token comment">#ttyUSB0是你sdr连接到虚拟机的串口号</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <h1 id="WiFi通信基础：MAC架构"><a href="#WiFi通信基础：MAC架构" class="headerlink" title="WiFi通信基础：MAC架构"></a>WiFi通信基础：MAC架构</h1><h2 id="1、数据包、帧和位"><a href="#1、数据包、帧和位" class="headerlink" title="1、数据包、帧和位"></a>1、数据包、帧和位</h2><p>当数据在计算机间传递的过程中，它从OSI模型上层逐步向下移至物理层，最终在物理层被转移到其他设备。</p>
+<p>数据按OSI模型传输时，每层都将在该数据上添加报头信息，使得它被另一台计算机接收时可以重新组合数据。</p>
+<p>1、在网络层，来自4~7层的数据被添加IP报头</p>
+<p>2、第3层的IP数据包封装了来自更高层的数据</p>
+<p>3、在数据链路层，IP数据包被封装在帧（frame）内并增加了MAC报头</p>
+<p>4、当帧到达物理层时，会被增加携带大量信息的物理层（PHY）报头</p>
+<p>5、最终在物理层，数据将按比特格式传输，<strong>1字节等于8比特</strong></p>
+<h2 id="2、数据链路层"><a href="#2、数据链路层" class="headerlink" title="2、数据链路层"></a>2、数据链路层</h2><p>802.11 数据链路层分为两个子层，上层是IEEE802.2逻辑链路控制（LLC）子层，底层是媒介访问控制（MAC）子层</p>
+<p>802.11标准主要定义MAC子层的操作功能</p>
+<h3 id="2-1-MAC服务数据单元"><a href="#2-1-MAC服务数据单元" class="headerlink" title="2.1 MAC服务数据单元"></a>2.1 MAC服务数据单元</h3><p>网络层（第3层）将数据发送到数据链路层，数据被移交给LLC后即成为所谓的<strong>MAC服务数据单元（MSDU）</strong></p>
+<p>MSDU包含LLC 和第3层~第7层的数据，简单来说，就是<strong>包含IP数据包和一些LLC数据的数据净荷部分</strong>。</p>
+<h3 id="2-2-MAC协议数据单元"><a href="#2-2-MAC协议数据单元" class="headerlink" title="2.2 MAC协议数据单元"></a>2.2 MAC协议数据单元</h3><p>LLC 将 MSDU 发送到 MAC 子层后，需要给MSDU 增加MAC 报头信息，被封装后的MSDU称为<strong>MAC 协议数据单元（MPDU）</strong></p>
+<p>包含第2层（数据链路层）报头、帧主体和帧尾，<strong>帧尾是32比特的CRC值，也被称为帧校验序列（FCS）</strong></p>
+<p><img src="/2026/02/24/wifi-xie-yi-mac-ceng/image-20260224201920425.png"></p>
+<h2 id="3、物理层"><a href="#3、物理层" class="headerlink" title="3、物理层"></a>3、物理层</h2><p>物理层也被分为两个子层，上层被称为物理层汇聚协议（PLCP）子层，较低层部分称为物理媒介相关（PMD）子层</p>
+<p>PLCP为传输数据帧做好准备，将MAC子层的帧变成<strong>PLCP 协议数据单元（PPDU）</strong>，PMD子层进行数据调制处理并按比特方式进行传输</p>
+<p>物理层的<strong>PLCP服务数据单元（PSDU）就是MAC层的MPDU</strong>，它们的区别就在于OSI模型不同层次的观察角度</p>
+<p>PLCP接收到PSDU后，准备要传输的PSDU并创建PLCP协议数据单元（PPDU）</p>
+<p><img src="/2026/02/24/wifi-xie-yi-mac-ceng/image-20260224202234179.png"></p>
+<h2 id="4、三种802-11-帧类型"><a href="#4、三种802-11-帧类型" class="headerlink" title="4、三种802.11 帧类型"></a>4、三种802.11 帧类型</h2><h3 id="4-1-管理帧"><a href="#4-1-管理帧" class="headerlink" title="4.1 管理帧"></a>4.1 管理帧</h3><p>802.11管理帧（Management Frame）在 WLAN帧类型中占据多数</p>
+<p>无线终端加入或离开基本服务集（BSS）时会使用管理帧，有线网络不需要管理帧，它可以通过物理连接电缆或断开网络电缆执行这项功能</p>
+<p>802.11管理帧的另一个名称是管理MAC 协议数据单元（MMPDU）</p>
+<p>管理帧不携带任何上层信息，MMPDU帧主体不包含MSDU，只有第2层信息字段和信息元素，在管理帧主体中，信息字段长度是固定，信息元素长度可变</p>
+<p>下面列出了802.11标准和修订案中定义的所有14种管理帧子类型：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Association request、Association response、Reassociation request、Reassociation response、Probe request、Probe response、Beacon、Announcement traffic indication message <span class="token punctuation">(</span>ATIM<span class="token punctuation">)</span>、Disassociation、Authentication、Deauthentication、Action、Action No ACK、Timing advertisement<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p>也可以在windows里用MobaXterm软件</p>
-<p><img src="/2026/02/04/zai-antsdr-e200-shang-pei-zhi-openwifi-guo-cheng-zong-jie/image-20260206105908803.png" alt="image-20260206105908803"></p>
-<p>选择有USB-SERIAL的串口，波特率设置为115200就可以开始通信。</p>
-<p>可能会跳出来一堆ERROR，不要管它。</p>
-<h3 id="2、运行驱动脚本"><a href="#2、运行驱动脚本" class="headerlink" title="2、运行驱动脚本"></a>2、运行驱动脚本</h3><p>等root@analog：~出来之后，一条一条输入指令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> openwifi		<span class="token comment">#不cd也行，只是后面的指令都要带上~/openwifi</span>
-./setup_once.sh	<span class="token comment">#初始化驱动的，1.4.0要运行这条指令才会安装驱动，1.5.0应该也是同理吧</span>
-./wgd.sh		<span class="token comment">#设备初始化</span>
-./fosdem-11ag.sh	<span class="token comment">#路由赋能</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-2-控制帧"><a href="#4-2-控制帧" class="headerlink" title="4.2 控制帧"></a>4.2 控制帧</h3><p>802.11控制帧（Control Frame）按照基本速率（basic rate）传输，用来协助数据帧交付</p>
+<p>控制帧还可以用于清除信道、请求信道，并对单播帧进行确认，只包含报头信息</p>
+<p>下面列出了802.11标准定义的所有9种控制帧子类型：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Power Save Poll（PS-Poll）、Request to send（RTS）、Clear to send（CTS）、Acknowledgment（ACK）、Contention Free-End（CF-End）、CF-End+CF-ACK 、Block ACK Request<span class="token punctuation">[</span>BlockAckReq<span class="token punctuation">]</span>、Block ACK<span class="token punctuation">[</span>BlockAck<span class="token punctuation">]</span>、Control wrapper<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p>等到该命令结束后，看到sdr:AP-ENABLED就说明ANTSDR作为wifi的AP功能已经就绪，其他ERROR不用管。这时候手机能找到一个叫做openwifi的wifi信号，密码是openwifi。</p>
-<p>连上之后这时候还不能上网，只能进入一个openwifi的内置网页。</p>
-<p>为了使这个wifi可以上网，接下来的操作要在Linux下进行。</p>
-<h2 id="三、配置Ubuntu虚拟机充当路由器"><a href="#三、配置Ubuntu虚拟机充当路由器" class="headerlink" title="三、配置Ubuntu虚拟机充当路由器"></a>三、配置Ubuntu虚拟机充当路由器</h2><h3 id="1、配置双网卡"><a href="#1、配置双网卡" class="headerlink" title="1、配置双网卡"></a>1、配置双网卡</h3><h4 id="step1、在虚拟机设备中添加一个网络配置器"><a href="#step1、在虚拟机设备中添加一个网络配置器" class="headerlink" title="step1、在虚拟机设备中添加一个网络配置器"></a>step1、在虚拟机设备中添加一个网络配置器</h4><h4 id="step2、更改虚拟网络适配编辑器"><a href="#step2、更改虚拟网络适配编辑器" class="headerlink" title="step2、更改虚拟网络适配编辑器"></a>step2、更改虚拟网络适配编辑器</h4><p>打开虚拟网络编辑器，点“更改设置”（使用管理员权限）</p>
-<p><img src="/2026/02/04/zai-antsdr-e200-shang-pei-zhi-openwifi-guo-cheng-zong-jie/image-20260206111725782.png" alt="image-20260206111725782"></p>
-<p>点击“添加网络”，选择“桥接模式”，选择配置到以太网网卡（此使应用网线连接电脑和SDR），也就是带Realtek USB或者PCLe xxx Controller的选项</p>
-<p><img src="/2026/02/04/zai-antsdr-e200-shang-pei-zhi-openwifi-guo-cheng-zong-jie/image-20260206112230122.png" alt="image-20260206112230122"></p>
-<h3 id="2、检查虚拟机本身IP配置"><a href="#2、检查虚拟机本身IP配置" class="headerlink" title="2、检查虚拟机本身IP配置"></a>2、检查虚拟机本身IP配置</h3><p>配置之前的虚拟机一般是使用NAT模式上网（<strong>要确保虚拟机设备本身能够联网！</strong>）不要去乱改ens33的IPv4，改了点<strong>恢复默认</strong>或<strong>自动（DHCP）</strong>。</p>
-<p>至此，虚拟机有了两个网卡：</p>
-<p><strong>网卡 1 (<code>ens33</code>)</strong>：设置为 <strong>NAT 模式</strong>。</p>
-<ul>
-<li><em>作用</em>：连接外网。NAT 模式最稳定，不受宿主机网络环境变化影响。</li>
-</ul>
-<p><strong>网卡 2 (<code>ens37</code>)</strong>：设置为 <strong>桥接模式 (Bridged)</strong>。</p>
-<ul>
-<li><em>作用</em>：连接板子。必须<strong>指定桥接</strong>到你连接板子的那张 USB 有线网卡（Realtek&#x2F;Intel等），不能选“自动”。</li>
-</ul>
-<p><strong>对于 <code>ens37</code> (内网&#x2F;连板子)</strong>：</p>
-<ul>
-<li>IPv4 设置为 <strong>手动 (Manual)</strong>。</li>
-<li><strong>IP 地址</strong>：<code>192.168.10.1</code></li>
-<li><strong>子网掩码</strong>：<code>255.255.255.0</code></li>
-<li><strong>网关 (Gateway)</strong>：<strong>留空</strong>。</li>
-<li><em>解释</em>：这是作为路由器的 LAN 口 IP。不填网关是为了防止 Ubuntu 的上网流量错误地流向板子，导致断网。</li>
-</ul>
-<h3 id="3、开启路由功能"><a href="#3、开启路由功能" class="headerlink" title="3、开启路由功能"></a>3、开启路由功能</h3><h4 id="step1、在Ubuntu终端输入指令"><a href="#step1、在Ubuntu终端输入指令" class="headerlink" title="step1、在Ubuntu终端输入指令"></a>step1、在Ubuntu终端输入指令</h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> ufw disable	<span class="token comment">#关闭防火墙</span>
-
-<span class="token comment">#开启Linux内核的IP转发功能，允许数据包在ens37和ens33之间转发</span>
-<span class="token function">sudo</span> <span class="token function">sysctl</span> <span class="token parameter variable">-w</span> <span class="token assign-left variable">net.ipv4.ip_forward</span><span class="token operator">=</span><span class="token number">1</span>
-
-<span class="token comment">#把板子的数据包伪装成ens33自己的IP再发送出去，这样才能与外网通信</span>
-<span class="token function">sudo</span> iptables <span class="token parameter variable">-t</span> nat <span class="token parameter variable">-A</span> POSTROUTING <span class="token parameter variable">-o</span> ens33 <span class="token parameter variable">-j</span> MASQUERADE
-
-<span class="token comment"># 告诉 Ubuntu， 192.168.13.0/24 网络段的数据要从 SDR 发出去，保证虚拟机获得的数据能够下放至SDR，最后到手机。</span>
-<span class="token function">sudo</span> <span class="token function">ip</span> route <span class="token function">add</span> <span class="token number">192.168</span>.13.0/24 via <span class="token number">192.168</span>.10.122 dev ens37<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="step2、在板子的串口终端输入指令"><a href="#step2、在板子的串口终端输入指令" class="headerlink" title="step2、在板子的串口终端输入指令"></a>step2、在板子的串口终端输入指令</h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">route <span class="token function">add</span> default gw <span class="token number">192.168</span>.10.1	<span class="token comment">#添加默认网关，解决“发出去”的问题</span>
-<span class="token builtin class-name">echo</span> <span class="token string">"nameserver 8.8.8.8"</span> <span class="token operator">></span> /etc/resolv.conf	<span class="token comment">#配置DNS服务器</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>然后手机就能连接上openwifi的热点并上网了。</p>
+<h3 id="4-3-数据帧"><a href="#4-3-数据帧" class="headerlink" title="4.3 数据帧"></a>4.3 数据帧</h3><p>大部分802.11数据帧（Data Frame）都<strong>携带来自高层协议的数据</strong>，3~7层的MSDU净荷通常出于数据私密的要求被加密</p>
+<p>仍然有些数据帧不携带任何数据，它们的存在是为了在BSS内进行特殊的媒介访问控制</p>
+<p>不包含MSDU的数据帧不必加密，因为3~7层的数据净荷不存在</p>
+<h2 id="5、信标管理帧"><a href="#5、信标管理帧" class="headerlink" title="5、信标管理帧"></a>5、信标管理帧</h2><p>信标管理帧（Beacon management frame）通常也称为信标（Beacon），Beacon本质上可以认为是无线网络的心跳</p>
+<p>基本服务集（BSS）中无线AP发送 Beacon，而客户端侦听 Beacon，<strong>客户端只会在加入独立基本服务集（IBSS）（也称为Ad Hoc 模式）时才发送 Beacon</strong></p>
+<p>每个信标包含一个时间戳，客户端用它来保持与无线AP 的时钟同步</p>
+<p><em>信标帧主体包含了如下一些内容：</em></p>
+<p><em>Time Stamp（时间戳）：携带同步信息</em></p>
+<p><em>Spread spectrum parameter set（扩频参数集）：指FHSS、DSSS、ERP、OFDM或HT特定信息</em></p>
+<p><em>Channel information（信道信息）：AP或IBSS使用的信道Data rates（数据率）：指基本速率和支持速率</em></p>
+<p><em>Service set capabilities（服务集能力）：额外BSS或IBSS参数</em></p>
+<p><em>SSID（服务集标识）：逻辑无线局域网名称</em></p>
+<p><em>Traffic indication map&#x2F;TIM（流量指示图）：是节电进程使用的字段</em></p>
+<p><em>QoS capabilities（QoS能力）：服务质量和EDCA信息</em></p>
+<p><em>Robust Security Network capabilities（RSN 能力）：TKIP 或 CCMP 加密信息和认证方法</em></p>
+<p><em>Vendor proprietary information（供应商私有信息）：供应商独有或厂商特定信息</em></p>
+<p>信标帧包含客户端加入BSS之前需要了解的所有必要信息，信标帧大约每秒传输10次左右，在某些AP上可以配置信标帧的发送间隔，但不能禁用它</p>
+<h2 id="6、无线扫描"><a href="#6、无线扫描" class="headerlink" title="6、无线扫描"></a>6、无线扫描</h2><p>客户端在连接到AP之前，首先必须发现它。可以通过两种方式：被动扫描或主动扫描</p>
+<h3 id="6-1-被动扫描"><a href="#6-1-被动扫描" class="headerlink" title="6.1 被动扫描"></a>6.1 被动扫描</h3><p>客户端通过侦听AP不断发送的<strong>信标帧Beacon</strong>来发现AP</p>
+<p>如果客户端侦听到多个具有相同SSID的AP信号，它会尝试关联信号最好的无线AP</p>
+<h3 id="6-2-主动扫描"><a href="#6-2-主动扫描" class="headerlink" title="6.2 主动扫描"></a>6.2 主动扫描</h3><p>在主动扫描中，客户端发送被称为探询请求**（Probe request）<strong>的管理帧，可以包含客户端正在寻找的特定无线局域网的SSID</strong>（指定SSID）<strong>，也可以用来查看当前环境中所有无线局域网的SSID</strong>（不指定SSID）**</p>
+<p><strong>指定SSID：<strong>支持这个特定SSID的所有AP收到请求后，通常会回复探询响应</strong>（Probe response）</strong>，探询响应帧的主体所包含的信息与信标帧几乎完全相同，除了字段流量指示图（TIM）外，探询响应帧也包含了所有客户端加入 BSS 前必须要了解的BSS信息</p>
+<p>**不指定SSID：**客户端发送SSID 字段为null 的探询请求帧可以探测到网络中所有无线局域网的SSID，包含特定 SSID信息的探询请求帧被称为定向探询请求（directed probe request），不包含SSID信息的探询请求帧被称为空探询请求（null probe request）</p>
+<p><strong>被动扫描的一个缺点就是信标帧只会在与无线AP 相同的信道上广播，而客户端发起的主动扫描会在所有可用的信道上发送探询请求帧</strong></p>
+<h2 id="7、认证"><a href="#7、认证" class="headerlink" title="7、认证"></a>7、认证</h2><p>连接到 802.11基本服务集（BSS）需要两个步骤，第一个步骤是认证（authentication）</p>
+<p>802.11客户端通过AP将数据发送给网络上的另一个设备之前，必须按顺序执行认证和关联步骤</p>
+<p>802.11身份认证只是在客户端和AP之问建立了一条初始连接，即认证两台设备都是有效的802.11设备</p>
+<p>802.11-2007标准描述了两种认证方法：<strong>开放式系统认证和共享密钥认证</strong></p>
+<h3 id="7-1-共享密钥认证"><a href="#7-1-共享密钥认证" class="headerlink" title="7.1 共享密钥认证"></a>7.1 共享密钥认证</h3><p>客户端向AP发出请求，AP生成一个挑战码X，发送给客户端，客户端用自己的密钥进行加密得到密文Y，发送给AP，AP收到后用自己的密钥将其解码得到Z，对比最开始的X和Z，如果完全一致说明认证成功。</p>
+<h2 id="8、关联"><a href="#8、关联" class="headerlink" title="8、关联"></a>8、关联</h2><p>无线客户端通过AP的认证后，下一步就要与 AP进行关联</p>
+<p>在关联过程中，客户端将关联请求（associate request）发送给AP，希望加入BSS，AP回应关联响应（associate response），允许或拒绝客户端加入 BSS</p>
+<p>客户端通过完成关联成为BSS成员后，将发送 DHCP请求，并在收到DHCP响应后，开始与上层进行通信</p>
+<h3 id="8-1-漫游"><a href="#8-1-漫游" class="headerlink" title="8.1 漫游"></a>8.1 漫游</h3><p>当无线局域网存在多个无线AP时，802.11标准提供一种功能使客户端从一个AP 过渡到另一个AP 时仍保持上层应用程序的网络连接，称为漫游（Roaming）</p>
+<p>漫游的决定权由客户端掌握，决定客户端是否漫游的规则由无线网卡制造商确定，通常包括信号强度、噪音水平和误码率</p>
+<p>客户端在通信时，会持续寻找其他的无线AP，并与那些在范围内的无线AP 进行认证</p>
+<p>客户端可以与多个AP认证，但只和一个AP 关联，当客户端移动并远离其原本关联的无线AP，信号强度低于预定信号阈值时，它将尝试连接到另一个AP，并从其当前的BSS 漫游到新的BSS</p>
+<p>客户端漫游时，原来的AP 和新的AP会通过分布系统媒介互相通信并共同提供客户端的完全切换</p>
+<p>在基于无线控制器的无线局域网解决方案中，漫游切换机制由WLAN控制器控制</p>
+<h3 id="8-2-重关联"><a href="#8-2-重关联" class="headerlink" title="8.2 重关联"></a>8.2 重关联</h3><p>当客户端决定漫游到一个新的无线AP时，会将一个重关联请求帧（reassociation）发送到新的无线AP</p>
+<p>重关联过程如下：</p>
+<p>（1）客户端向新的无线AP 发送重关联请求，重关联请求帧包含当前正在连接的AP（即原来的AP）的 BSSID（MAC 地址）</p>
+<p>（2）新AP 使用 ACK帧回应</p>
+<p>（3）新的AP经由无线网络向客户端发送重关联响应帧</p>
+<p>（4）客户端给新AP 发送 ACK</p>
+<p><strong>客户端不必向原来的AP 发送解除关联帧，因为客户端假定两个AP已经通过分布系统媒介进行了通信</strong></p>
+<p>（5）新AP使用 DSM与原来的AP通信</p>
+<p>新AP尝试通知原AP有关漫游客户端的信息，并要求原AP转发属于漫游客户端的所有缓冲数据</p>
+<p>AP之间的通信标准是私有的，未在802.11-2007标准中定义，在基于控制器的无线局域网解决方案中，AP之间的通信通过控制器完成</p>
+<p>（6）如果通信成功，原来的AP通过分发系统媒介把所有缓冲的数据转发到新的无线AP</p>
+<p>（7）新AP会通过无线网络将这些被转发过来的数据传输给客户端</p>
+<p>（8）客户端向新的无线AP发送 ACK帧，确认它收到了这些数据</p>
+<p><strong>如果多个数据帧被转发到新的AP，每个帧都会重复第7和第8步</strong></p>
+<p><strong>如果重关联不成功，客户端将保持与原始AP的连接，继续与它通信或再次尝试漫游到另一个AP</strong></p>
+<h2 id="9、解除认证和解除关联"><a href="#9、解除认证和解除关联" class="headerlink" title="9、解除认证和解除关联"></a>9、解除认证和解除关联</h2><p>是一种通告，而非请求</p>
+<p><strong>认证是关联的先决条件，解除认证帧会自动导致关联解除</strong></p>
+<p><strong>双方都可以发送解除认证帧或解除关联帧</strong>，不能被任何一方拒绝</p>
+<h2 id="10、确认帧"><a href="#10、确认帧" class="headerlink" title="10、确认帧"></a>10、确认帧</h2><p>确认帧（ACK）是9种控制帧之一，也是802.11 CSMA&#x2F;CA媒介访问控制方法的重要组成部分</p>
+<p>由于802.11是无线媒介，无法确保数据传输成功，无线站点只能通过接收站的接收通告来了解传输数据帧是否已被正确接收，即确认帧</p>
+<p>ACK帧是一种由14个字节构成的简单帧，当一个无线站点接收到数据后，它会等待一段很短的时间，称为短帧间间隔（SIFS），然后会复制这个数据帧中的发送端MAC 地址，将其置于ACK帧的接收地址（RA）字段，然后发送这个ACK帧进行回复</p>
+<p>如果传输顺利，数据帧的发送端会接收到接收地址字段（RA）为其 MAC 地址的ACK帧，从而了解到该帧被正确接收且未受到破坏</p>
+<p><strong>因为媒介的半双工特性，所以ACK帧优先级是最高的</strong></p>
+<p>每个单播帧的交付都需要被确认否则将会重传</p>
+<p>ACK帧是用于对数据交付进行验证的<br><img src="/2026/02/24/wifi-xie-yi-mac-ceng/image-20260224211141494.png" alt="ACK"></p>
 
                 
             </div>
@@ -508,7 +542,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2026/02/04/zai-antsdr-e200-shang-pei-zhi-openwifi-guo-cheng-zong-jie/">http://example.com/2026/02/04/zai-antsdr-e200-shang-pei-zhi-openwifi-guo-cheng-zong-jie/</a>
+                    <a href="http://example.com/2026/02/24/wifi-xie-yi-mac-ceng/">http://example.com/2026/02/24/wifi-xie-yi-mac-ceng/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -593,9 +627,59 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2026/02/24/wifi-xie-yi-mac-ceng/">
+                    <div class="card-image">
+                        
+                        <img src="/my_images/4.jpg" class="responsive-img" alt="">
+                        
+                        <span class="card-title"></span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2026-02-24
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/wifi%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                    wifi协议学习
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/wifi/">
+                        <span class="chip bg-color">wifi</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
             <div class="card">
                 <a href="/2026/02/07/ai-agent-ru-men-1/">
                     <div class="card-image">
@@ -612,9 +696,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2026-02-07
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2026-02-07
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -636,55 +720,6 @@
                     
                     <a href="/tags/mini-swe-agent/">
                         <span class="chip bg-color">mini-swe-agent</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
-            </div>
-            <div class="card">
-                <a href="/2026/02/04/zai-antsdr-e200-shang-pei-zhi-openwifi-guo-cheng-zong-jie/">
-                    <div class="card-image">
-                        
-                        <img src="/my_images/1.jpg" class="responsive-img" alt="">
-                        
-                        <span class="card-title"></span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2026-02-04
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/Openwifi/" class="post-category">
-                                    Openwifi
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/wifi/">
-                        <span class="chip bg-color">wifi</span>
                     </a>
                     
                 </div>
